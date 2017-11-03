@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <title>Test Web Application</title>
+    <link rel="stylesheet" href= 'app/css/app.css'/>
+    <link rel="stylesheet" href= 'app/css/bootstrap.css'/>
+    <script type="text/javascript" src="libs/angular/angular.min.js"></script>
+    <script type="text/javascript" src="libs/angular-resource/angular-resource.min.js"></script>
+    <script type="text/javascript" src='app/js/app.js' ></script>
+    <script type="text/javascript" src='app/js/service/user_service.js' ></script>
+    <script type="text/javascript" src='app/js/controller/user_controller.js'></script>
+
+  </head>
+  <body ng-app="myApp" class="ng-cloak">
+  <div class="generic-container" ng-controller="UserController as ctrl">
+    <div class="panel panel-default">
+      <div class="panel-heading"><span class="lead">Organiser</span></div>
+      <div class="formcontainer">
+        <form ng-submit="ctrl.submit()" name="myForm" class="form-horizontal">
+          <input type="hidden" ng-model="ctrl.user.id" />
+          <div class="row">
+            <div class="form-group col-md-12">
+              <label class="col-md-2 control-lable" >Name</label>
+              <div class="col-md-7">
+                <input type="text" ng-model="ctrl.user.username" name="uname" class="username form-control input-sm" placeholder="Enter your name" required ng-minlength="3"/>
+                <div class="has-error" ng-show="myForm.$dirty">
+                  <span ng-show="myForm.uname.$error.required">required field</span>
+                  <span ng-show="myForm.uname.$error.minlength">Minimum length required is 3</span>
+                  <span ng-show="myForm.uname.$invalid">field is invalid </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="form-group col-md-12">
+              <label class="col-md-2 control-lable" >Location</label>
+              <div class="col-md-7">
+                <input type="text" ng-model="ctrl.user.location" class="form-control input-sm" placeholder="Enter your Address (optional)"/>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-12">
+              <label class="col-md-2 control-lable" >Email</label>
+              <div class="col-md-7">
+                <input type="email" ng-model="ctrl.user.email" name="email" class="email form-control input-sm" placeholder="Enter your Email" required/>
+                <div class="has-error" ng-show="myForm.$dirty">
+                  <span ng-show="myForm.email.$error.required">required field</span>
+                  <span ng-show="myForm.email.$invalid">field is invalid </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row col-md-6 ">
+            <div class="form-group ">
+              <label class="col-md-3 control-lable" >Wallet</label>
+              <div class="col-md-7 col-md-offset-1">
+                <input type="number" ng-model="ctrl.user.wallet.amount" class="form-control input-sm" name="wallet"  placeholder="Money amount (optional)"/>
+              </div>
+            </div>
+          </div>
+
+          <div class="row col-md-4">
+            <div class="form-group ">
+              <label class="col-md-3 control-lable" >Currency</label>
+              <div class="col-md-7">
+                <select class="form-control" ng-model="ctrl.user.wallet.currency" id="currency">
+                <option value="US">US</option>
+                <option value="EU">EU</option>
+
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-actions floatRight">
+              <input type="submit"  value="{{!ctrl.user.id ? 'Add' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid">
+              <button type="button" ng-click="ctrl.reset()" class="btn btn-warning btn-sm" ng-disabled="myForm.$pristine">Reset All</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <!-- Default panel contents -->
+      <div class="panel-heading"><span class="lead">list of candidates</span></div>
+      <div class="tablecontainer">
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Email</th>
+            <th>Wallet</th>
+            <th>Currency</th>
+            <th width="20%"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="u in ctrl.users">
+            <td><span ng-bind="u.id"></span></td>
+            <td><span ng-bind="u.username"></span></td>
+            <td><span ng-bind="u.location"></span></td>
+            <td><span ng-bind="u.email"></span></td>
+            <td><span ng-bind="u.wallet.amount"></span></td>
+            <td><span ng-bind="u.wallet.currency"></span></td>
+            <td>
+              <button type="button" ng-click="ctrl.edit(u.id)" class="btn btn-success custom-width">Change</button>  <button type="button" ng-click="ctrl.remove(u.id)" class="btn btn-danger custom-width">Delete</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  </body>
+</html>
