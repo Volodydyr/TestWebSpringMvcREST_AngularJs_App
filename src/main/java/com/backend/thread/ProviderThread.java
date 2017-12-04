@@ -26,7 +26,7 @@ public class ProviderThread extends Thread {
             InputStream inputStream = file.getInputStream();
             this.worker.setInputStream(inputStream);
 
-            File newFile = new File("C:/Users/User/Documents/" + getName() + fileName);
+            File newFile = new File("C:/temp/" + getName() + fileName);
             if (!newFile.exists()) {
                 newFile.createNewFile();
             }

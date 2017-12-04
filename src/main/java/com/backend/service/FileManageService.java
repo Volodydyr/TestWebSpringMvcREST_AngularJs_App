@@ -32,7 +32,7 @@ public class FileManageService {
             return new ModelAndView("uploadForm");
         }
         threadsMain(file, fileName);
-        return new ModelAndView("showFile", "message", "File '" + fileName + "' have been uploaded and hashed " + i + " times so you have " + i + " files with identical content and different generated hash at the end of each file. Please check the output console and the target \"C:/Users/User/Documents/\" (if you use Windows)");
+        return new ModelAndView("showFile", "message", "File '" + fileName + "' have been uploaded " + i + " times so you have " + i + " files with identical content and different names and generated hash at the end of each file. Please check the output console and the target \"C:/temp/\" (if you use Windows)");
     }
 
     private void threadsMain(MultipartFile file, String fileName) {
