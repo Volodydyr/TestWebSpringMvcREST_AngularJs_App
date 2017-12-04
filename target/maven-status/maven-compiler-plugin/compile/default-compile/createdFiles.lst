@@ -1,0 +1,6 @@
+com\backend\validator\FileValidator.class
+com\backend\service\FileManageService.class
+com\backend\controller\FileManageController.class
+com\backend\model\UploadedFile.class
+com\backend\thread\WorkerThread.class
+com\backend\thread\ProviderThread.class
