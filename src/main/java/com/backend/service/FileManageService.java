@@ -13,8 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Service
 public class FileManageService {
@@ -42,35 +40,25 @@ public class FileManageService {
         try {
             pi.connect(po);
 
-            ProviderThread[] threads = new ProviderThread[3];
-            WorkerThread worker = new WorkerThread();
+            ProviderThread[] threads = new ProviderThread[100];
+            for (i = 0; i < 100; i++) {
+                threads[i] = new ProviderThread("provider" + i, file, fileName);
+            }
+            WorkerThread worker = new WorkerThread(threads, pi, po);
 
-            for (i = 0; i < 3; i++) {
-                threads[i] = new ProviderThread("provider" + i, file, fileName, worker);
+            for (i = 0; i < 100; i++) {
                 threads[i].goSuspend();
                 threads[i].start();
+            }
+            Thread.sleep(100);
+            worker.start();
+
+            for (i = 0; i < 100; i++) {
                 Thread.sleep(100);
                 threads[i].goResume();
                 threads[i].join();
             }
 
-           /*ExecutorService service = Executors.newSingleThreadExecutor();
-            for(int i = 0; i < 3; i++){
-                service.submit(new Runnable()  {
-                    public void run() {
-                        try {
-                            ProviderThread provider = new ProviderThread("provider", file, fileName, worker);
-                            provider.goSuspend();
-                            provider.start();
-                            Thread.sleep(100);
-                            provider.goResume();
-                            provider.join();
-                        }catch (InterruptedException e){
-                            e.printStackTrace();
-                        }
-                    }
-                });
-            }*/
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (IOException e) {

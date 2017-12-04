@@ -4,6 +4,8 @@ import lombok.Data;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -12,17 +14,27 @@ import java.security.NoSuchAlgorithmException;
 public class WorkerThread extends Thread {
 
     private String fileName;
-    private InputStream inputStream;
-    private OutputStream outputStream;
+    private PipedInputStream pi;
+    private PipedOutputStream po;
+    private ProviderThread[] providers;
 
-    private String hash;
+    public WorkerThread (ProviderThread[] providers, PipedInputStream pi, PipedOutputStream po) {
+        this.providers = providers;
+        this.pi = pi;
+        this.po = po;
+    }
 
     public void run() {
 
         try {
             System.out.println("Thread Worker started");
-            this.hash = getMD5hash(this.inputStream.toString());
-            System.out.println("Thread Worker generates the MD5 hash: " + this.hash);
+           /* sleep(1000);*/
+          for(ProviderThread provider: providers) {
+              provider.setMd5hash(getMD5hash(provider.getInputStream().toString()));
+              System.out.println("Thread Worker generates the MD5 hash: " + provider.getMd5hash());
+
+          }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

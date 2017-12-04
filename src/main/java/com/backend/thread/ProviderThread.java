@@ -1,17 +1,22 @@
 package com.backend.thread;
 
+import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 
+@Data
 public class ProviderThread extends Thread {
     private MultipartFile file;
     private String fileName;
     private WorkerThread worker;
-    private boolean suspendFlag;
 
-    public ProviderThread(String name, MultipartFile file, String fileName, WorkerThread worker) {
-        this.worker = worker;
+    private InputStream inputStream;
+    private OutputStream outputStream;
+    private boolean suspendFlag;
+    private String md5hash;
+
+    public ProviderThread(String name, MultipartFile file, String fileName) {
         this.setName(name);
         this.file = file;
         this.fileName = fileName;
@@ -23,17 +28,18 @@ public class ProviderThread extends Thread {
 
         try {
             System.out.println("Thread " + getName() + " started");
-            InputStream inputStream = file.getInputStream();
-            this.worker.setInputStream(inputStream);
+            this.inputStream = file.getInputStream();
 
             File newFile = new File("C:/temp/" + getName() + fileName);
             if (!newFile.exists()) {
                 newFile.createNewFile();
             }
-            OutputStream outputStream = new FileOutputStream(newFile);
-            this.worker.setOutputStream(outputStream);
-
-            this.worker.run();
+            this.outputStream = new FileOutputStream(newFile);
+            int read = 0;
+            byte[] bytes = new byte[1024];
+            while ((read = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
 
             Thread.sleep(100);
             synchronized (this) {
@@ -42,14 +48,8 @@ public class ProviderThread extends Thread {
                 }
             }
 
-            int read = 0;
-            byte[] bytes = new byte[1024];
-            while ((read = inputStream.read(bytes)) != -1) {
-                outputStream.write(bytes, 0, read);
-            }
-            String hash = getName() + "-HASH=" + this.worker.getHash();
-            System.out.println("Provider " + getName() + " writes the " + hash + " hash to the file");
-            outputStream.write(hash.getBytes());
+            System.out.println("Provider " + getName() + " writes the " + md5hash + " hash to the file");
+            outputStream.write((md5hash + getName()).getBytes());
 
         } catch (InterruptedException e) {
             e.printStackTrace();
