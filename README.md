@@ -1,4 +1,4 @@
-Multi Tread Example
+Multi Threads Example 
 
 For quick application deploy
  1) if you use Windows create target "C:/temp/" 
