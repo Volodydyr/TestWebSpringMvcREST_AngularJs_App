@@ -11,13 +11,15 @@ public class ProviderThread extends Thread {
     private String fileName;
     private WorkerThread worker;
 
-    private InputStream inputStream;
-    private OutputStream outputStream;
+    private PipedInputStream pi;
+    private PipedOutputStream po;
     private boolean suspendFlag;
     private String md5hash;
 
-    public ProviderThread(String name, MultipartFile file, String fileName) {
+    public ProviderThread(String name, MultipartFile file, String fileName, PipedInputStream pi, PipedOutputStream po) {
         this.setName(name);
+        this.pi = pi;
+        this.po = po;
         this.file = file;
         this.fileName = fileName;
         System.out.println("Create tread: " + getName());
@@ -28,17 +30,18 @@ public class ProviderThread extends Thread {
 
         try {
             System.out.println("Thread " + getName() + " started");
-            this.inputStream = file.getInputStream();
+           InputStream inputStream = file.getInputStream();
 
             File newFile = new File("C:/temp/" + getName() + fileName);
             if (!newFile.exists()) {
                 newFile.createNewFile();
             }
-            this.outputStream = new FileOutputStream(newFile);
+            OutputStream outputStream = new FileOutputStream(newFile);
             int read = 0;
             byte[] bytes = new byte[1024];
             while ((read = inputStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, read);
+                po.write(bytes, 0, read);
             }
 
             Thread.sleep(100);

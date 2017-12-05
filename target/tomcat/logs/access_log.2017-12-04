@@ -92,3 +92,9 @@
 0:0:0:0:0:0:0:1 - - [04/Dec/2017:21:39:39 +0200] "GET /FileManageTestApp/ HTTP/1.1" 302 - http-bio-8080-exec-3 94
 0:0:0:0:0:0:0:1 - - [04/Dec/2017:21:39:39 +0200] "GET /FileManageTestApp/fileUploadForm.htm HTTP/1.1" 200 867 http-bio-8080-exec-4 87
 0:0:0:0:0:0:0:1 - - [04/Dec/2017:21:39:54 +0200] "POST /FileManageTestApp/fileUpload.htm HTTP/1.1" 200 479 http-bio-8080-exec-5 467
+0:0:0:0:0:0:0:1 - - [04/Dec/2017:22:32:33 +0200] "POST /FileManageTestApp/fileUpload.htm HTTP/1.1" 200 478 http-bio-8080-exec-2 568
+0:0:0:0:0:0:0:1 - - [04/Dec/2017:22:34:10 +0200] "POST /FileManageTestApp/fileUpload.htm HTTP/1.1" 200 478 http-bio-8080-exec-1 487
+0:0:0:0:0:0:0:1 - - [04/Dec/2017:22:39:06 +0200] "POST /FileManageTestApp/fileUpload.htm HTTP/1.1" 200 478 http-bio-8080-exec-1 619
+0:0:0:0:0:0:0:1 - - [04/Dec/2017:22:53:41 +0200] "POST /FileManageTestApp/fileUpload.htm HTTP/1.1" 200 478 http-bio-8080-exec-1 505
+0:0:0:0:0:0:0:1 - - [04/Dec/2017:22:56:29 +0200] "POST /FileManageTestApp/fileUpload.htm HTTP/1.1" 200 478 http-bio-8080-exec-2 1051
+0:0:0:0:0:0:0:1 - - [04/Dec/2017:23:05:23 +0200] "POST /FileManageTestApp/fileUpload.htm HTTP/1.1" 200 478 http-bio-8080-exec-1 500

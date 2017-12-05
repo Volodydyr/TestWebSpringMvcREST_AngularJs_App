@@ -30,7 +30,15 @@ public class WorkerThread extends Thread {
             System.out.println("Thread Worker started");
            /* sleep(1000);*/
           for(ProviderThread provider: providers) {
-              provider.setMd5hash(getMD5hash(provider.getInputStream().toString()));
+              StringBuilder builder = new StringBuilder();
+              byte[] data = new byte[1024];
+              int len = pi.read(data, 0, 1024);
+              for (int i = 0; i < len; i++) {
+                  builder.append(data[i]);
+              }
+//            System.out.println(builder.toString());
+              String hash = getMD5hash(builder.toString());
+              po.write(hash.getBytes());
               System.out.println("Thread Worker generates the MD5 hash: " + provider.getMd5hash());
 
           }
