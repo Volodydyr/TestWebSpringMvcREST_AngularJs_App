@@ -9,19 +9,22 @@ import java.io.*;
 public class ProviderThread extends Thread {
     private MultipartFile file;
     private String fileName;
-    private WorkerThread worker;
+
 
     private PipedInputStream pi;
     private PipedOutputStream po;
     private boolean suspendFlag;
-    private String md5hash;
 
-    public ProviderThread(String name, MultipartFile file, String fileName, PipedInputStream pi, PipedOutputStream po) {
+    public ProviderThread(String name, MultipartFile file, String fileName) {
         this.setName(name);
-        this.pi = pi;
-        this.po = po;
         this.file = file;
         this.fileName = fileName;
+        try{
+            this.po = new PipedOutputStream();
+            this.pi =  new PipedInputStream(po);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
         System.out.println("Create tread: " + getName());
     }
 
@@ -51,8 +54,14 @@ public class ProviderThread extends Thread {
                 }
             }
 
-            System.out.println("Provider " + getName() + " writes the " + md5hash + " hash to the file");
-            outputStream.write((md5hash + getName()).getBytes());
+            byte[] data = new byte[1024];
+            int len = pi.read(data, 0, 1024);
+            for (int i = 0; i < len; i++) {
+                outputStream.write(data[i]);
+            }
+
+            System.out.println("Provider " + getName() + " writes the hash to the file");
+
 
         } catch (InterruptedException e) {
             e.printStackTrace();

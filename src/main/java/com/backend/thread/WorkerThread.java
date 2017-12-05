@@ -1,27 +1,16 @@
 package com.backend.thread;
 
-import lombok.Data;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-@Data
 public class WorkerThread extends Thread {
 
-    private String fileName;
-    private PipedInputStream pi;
-    private PipedOutputStream po;
     private ProviderThread[] providers;
 
-    public WorkerThread (ProviderThread[] providers, PipedInputStream pi, PipedOutputStream po) {
+    public WorkerThread (ProviderThread[] providers) {
         this.providers = providers;
-        this.pi = pi;
-        this.po = po;
     }
 
     public void run() {
@@ -30,17 +19,19 @@ public class WorkerThread extends Thread {
             System.out.println("Thread Worker started");
            /* sleep(1000);*/
           for(ProviderThread provider: providers) {
+
               StringBuilder builder = new StringBuilder();
               byte[] data = new byte[1024];
-              int len = pi.read(data, 0, 1024);
+              int len = provider.getPi().read(data, 0, 1024);
               for (int i = 0; i < len; i++) {
                   builder.append(data[i]);
               }
-//            System.out.println(builder.toString());
-              String hash = getMD5hash(builder.toString());
-              po.write(hash.getBytes());
-              System.out.println("Thread Worker generates the MD5 hash: " + provider.getMd5hash());
 
+            //System.out.println(builder.toString());
+              String hash = getMD5hash(builder.toString() + provider.getName());
+              hash += "_Md5Hash_" + provider.getName();
+                      provider.getPo().write(hash.getBytes());
+              System.out.println("Thread Worker generates the MD5 hash: " + hash + " for "+ provider.getName());
           }
 
         } catch (Exception e) {

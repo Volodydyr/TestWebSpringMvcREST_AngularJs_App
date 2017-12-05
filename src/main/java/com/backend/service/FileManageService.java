@@ -10,9 +10,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 
 @Service
 public class FileManageService {
@@ -34,23 +31,19 @@ public class FileManageService {
     }
 
     private void threadsMain(MultipartFile file, String fileName) {
-        PipedOutputStream po = new PipedOutputStream();
-        PipedInputStream pi = new PipedInputStream(); // or new PipedInputStream(po);
-
         try {
-            pi.connect(po);
 
             ProviderThread[] threads = new ProviderThread[100];
             for (i = 0; i < 100; i++) {
                 threads[i] = new ProviderThread("provider" + i, file, fileName);
             }
-            WorkerThread worker = new WorkerThread(threads, pi, po);
+            WorkerThread worker = new WorkerThread(threads);
 
             for (i = 0; i < 100; i++) {
                 threads[i].goSuspend();
                 threads[i].start();
             }
-            Thread.sleep(100);
+            Thread.sleep(200);
             worker.start();
 
             for (i = 0; i < 100; i++) {
@@ -60,8 +53,6 @@ public class FileManageService {
             }
 
         } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }
